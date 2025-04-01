@@ -1,0 +1,21 @@
+project_name: Test
+tasks:
+  - name: Data Stream double value 1
+    type: processor_nats
+    code: double.go
+    targets:
+      - cloud
+    source_topic: test_source_data
+    dest_topic: ttest_dest_data
+    component_name: data_double_test1
+    version: 1.0.0
+
+  - name: Data Stream double value 2
+    type: processor_nats
+    code: double.go
+    targets:
+      - cloud
+    source_topic: test_source_data
+    dest_topic: ttest_dest_data
+    component_name: data_double_test2
+    version: 1.0.0
