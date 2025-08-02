@@ -13,7 +13,7 @@ services:
     #   - internal
 
   wasmcloud:
-    image: ghcr.io/wasmcloud/wasmcloud:1.4.0
+    image: ghcr.io/wasmcloud/wasmcloud:1.8.0
     container_name: wasmcloud
     restart: always
     environment:
