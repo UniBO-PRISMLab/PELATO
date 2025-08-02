@@ -10,7 +10,7 @@ def print_banner():
 {Colors.CYAN}
 ╔═══════════════════════════════════════════════════════════════╗
 ║                            PELATO                             ║
-║              WebAssembly Component Builder & Deployer        ║
+║              WebAssembly Component Builder & Deployer         ║
 ╚═══════════════════════════════════════════════════════════════╝
 {Colors.RESET}
 """
