@@ -4,6 +4,7 @@ import logging
 import os
 import src.code_generator.template_compiler as template_compiler
 import time
+from ..colors import Colors
 
 def __parse_yaml(yaml_file):
     with open(yaml_file, 'r') as stream:
@@ -26,17 +27,17 @@ def generate(project_dir, registry_url, metrics, metrics_enabled):
     
     # Check if the project directory is valid
     if not os.path.exists(f"{project_dir}/workflow.yaml") or not os.path.exists(f"{project_dir}/tasks"):
-        logging.error(f"Project directory is not valid")
+        logging.error(f"{Colors.RED}Project directory is not valid{Colors.RESET}")
         return
     
     # Parsing del file di configurazione
     config = __parse_yaml(f"{project_dir}/workflow.yaml")
     
     if config is None:
-        logging.error("Error parsing workflow.yaml")
+        logging.error(f"{Colors.RED}Error parsing workflow.yaml{Colors.RESET}")
         return
     
-    print(f"Generating code for project {config['project_name']}")
+    print(f"{Colors.BLUE}Generating code for project {config['project_name']}{Colors.RESET}")
     
     if metrics_enabled:
         metrics['n_task'] = len(config['tasks'])
@@ -59,10 +60,10 @@ def generate(project_dir, registry_url, metrics, metrics_enabled):
             # Copy the code file to the output folder
             shutil.copy2(f"{project_dir}/tasks/{task['code']}", f"{output_dir}/{task['component_name']}/{task['code']}")
             
-            print(f" - Task {task['component_name']} generated")
+            print(f"{Colors.GREEN} - Task {task['component_name']} generated{Colors.RESET}")
             
         except Exception as e:
-            logging.error(f"Error generating task {task['component_name']}: {e}")
+            logging.error(f"{Colors.RED}Error generating task {task['component_name']}: {e}{Colors.RESET}")
             continue
         
     if metrics_enabled:
@@ -70,4 +71,4 @@ def generate(project_dir, registry_url, metrics, metrics_enabled):
         gen_metrics['gen_time'] = '%.3f'%(end_time - start_time)
         metrics['code_gen'] = gen_metrics
         
-    print("Code generation completed")
+    print(f"{Colors.GREEN}Code generation completed{Colors.RESET}")

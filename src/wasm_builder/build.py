@@ -3,6 +3,7 @@ import os
 import logging
 import yaml
 import time
+from ..colors import Colors
 
 def build_project(project_dir, reg_user, reg_pass, detached, metrics, metrics_enabled):
     
@@ -11,10 +12,10 @@ def build_project(project_dir, reg_user, reg_pass, detached, metrics, metrics_en
     
     # Check if the project directory is valid
     if not os.path.exists(f"{project_dir}/gen"):
-        logging.error(f"Project directory is not valid")
+        logging.error(f"{Colors.RED}Project directory is not valid{Colors.RESET}")
         return
     
-    print('Building WASM components')
+    print(f'{Colors.BLUE}Building WASM components{Colors.RESET}')
     
     os.environ["DOCKER_CLIENT_TIMEOUT"] = "120"
     os.environ["DOCKER_TIMEOUT"] = "120"
@@ -30,7 +31,7 @@ def build_project(project_dir, reg_user, reg_pass, detached, metrics, metrics_en
         client.images.get("wash-build-image:latest")
     except docker.errors.ImageNotFound:
         
-        print(' - Building wash-build-image from Dockerfile...')
+        print(f'{Colors.YELLOW} - Building wash-build-image from Dockerfile...{Colors.RESET}')
         client.images.build(
             path="src/wasm_builder/docker",
             dockerfile="build.Dockerfile",
@@ -47,22 +48,32 @@ def build_project(project_dir, reg_user, reg_pass, detached, metrics, metrics_en
             
         if detached == 'True':
             
-            print('Waiting for build to finish...')
-            for container in wait_list:
+            print(f'{Colors.BLUE}Waiting for build to finish...{Colors.RESET}')
+            for container_name in wait_list:
                 try:
-                    client.containers.get(container).wait()
-                except Exception:
+                    container = client.containers.get(container_name)
+                    result = container.wait()
+                    exit_code = result['StatusCode']
+                    
+                    if exit_code == 0:
+                        print(f"{Colors.GREEN} - Build successful for {container_name}, removing container{Colors.RESET}")
+                        container.remove()
+                    else:
+                        print(f"{Colors.RED} - Build failed for {container_name} (exit code: {exit_code}), keeping container for debugging{Colors.RESET}")
+                        
+                except Exception as e:
+                    print(f"{Colors.YELLOW} - Error waiting for container {container_name}: {e}{Colors.RESET}")
                     continue
         
     except Exception as e:
-        logging.error(f"Error building project: {e}")
+        logging.error(f"{Colors.RED}Error building project: {e}{Colors.RESET}")
         return
     
     if metrics_enabled:
         build_metrics['components_build_time'] = '%.3f'%(time.time() - start_time)
         metrics['build'] = build_metrics
         
-    print("Project built successfully")
+    print(f"{Colors.GREEN}Project built successfully{Colors.RESET}")
     
 def __build_wasm(task_dir, client, reg_user, reg_pass, detached, wait_list):
     
@@ -73,11 +84,22 @@ def __build_wasm(task_dir, client, reg_user, reg_pass, detached, wait_list):
     oci_url = wadm['spec']['components'][0]['properties']['image']
     name = wadm['spec']['components'][0]['name'] + '-build'
     
+    # Check if container with the same name already exists and remove it
+    try:
+        existing_container = client.containers.get(name)
+        print(f"{Colors.YELLOW} - Removing existing container {name}{Colors.RESET}")
+        existing_container.remove(force=True)
+    except docker.errors.NotFound:
+        # Container doesn't exist, continue
+        pass
+    except Exception as e:
+        print(f"{Colors.RED} - Warning: Could not remove existing container {name}: {e}{Colors.RESET}")
+    
     uid = os.getuid()
     gid = os.getgid()
     
     # Build the wasm module
-    print(f" - Building WASM module {oci_url}")
+    print(f"{Colors.BLUE} - Building WASM module {oci_url}{Colors.RESET}")
     container = client.containers.run(
         "wash-build-image:latest",
         environment=[f'REGISTRY={oci_url}',
@@ -86,7 +108,7 @@ def __build_wasm(task_dir, client, reg_user, reg_pass, detached, wait_list):
                      f'HOST_UID={uid}',
                      f'HOST_GID={gid}'],
         volumes={path: {'bind': '/app', 'mode': 'rw'}},
-        remove=True,
+        remove=False,
         detach=True,
         name=name
     )

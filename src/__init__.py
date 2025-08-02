@@ -5,6 +5,7 @@ import src.wasm_builder.build as wasm_builder
 import src.component_deploy.deploy as deployer
 import src.component_deploy.remove as remover
 import time
+from .colors import Colors
 
 class Pelato:
     def __init__(self):
@@ -39,14 +40,20 @@ class Pelato:
 
     def all(self, project_dir):
         
-        print('-------------------------------------------')
-        print(f"Starting PELATO for project {project_dir}")
-        print('-------------------------------------------')
+        print(f'{Colors.CYAN}═══════════════════════════════════════════════════════════════{Colors.RESET}')
+        print(f"{Colors.MAGENTA}🚀 Starting PELATO full pipeline for project {project_dir}{Colors.RESET}")
+        print(f'{Colors.CYAN}═══════════════════════════════════════════════════════════════{Colors.RESET}')
         
+        print(f"\n{Colors.BLUE}📋 Step 1/3: Code Generation{Colors.RESET}")
         self.generate(project_dir)
         time.sleep(1)
         
+        print(f"\n{Colors.BLUE}🔨 Step 2/3: Building Components{Colors.RESET}")
         self.build(project_dir)
         time.sleep(1)
         
+        print(f"\n{Colors.BLUE}🚀 Step 3/3: Deploying Components{Colors.RESET}")
         self.deploy(project_dir)
+        
+        print(f"\n{Colors.GREEN}🎉 PELATO pipeline completed successfully!{Colors.RESET}")
+        print(f'{Colors.CYAN}═══════════════════════════════════════════════════════════════{Colors.RESET}')

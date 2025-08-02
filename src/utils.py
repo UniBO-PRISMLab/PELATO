@@ -1,12 +1,13 @@
 import yaml
 import os
+from .colors import Colors
 
 def dump_metrics(metrics, project_dir):
     
     with open(f"{project_dir}/metrics.yaml", 'w') as file:
         yaml.dump(metrics, file)
     
-    print(f"Metrics saved in {project_dir}metrics.yaml")
+    print(f"{Colors.BLUE}📊 Metrics saved in {project_dir}/metrics.yaml{Colors.RESET}")
     
     return
 

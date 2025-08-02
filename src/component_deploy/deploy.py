@@ -3,6 +3,7 @@ import os
 import logging
 import yaml
 import time
+from ..colors import Colors
 
 def deploy_components(project_dir, nats_host, nats_port, detached, metrics, metrics_enabled):
 
@@ -10,10 +11,10 @@ def deploy_components(project_dir, nats_host, nats_port, detached, metrics, metr
     
     # Check if the project directory is valid
     if not os.path.exists(f"{project_dir}/gen"):
-        logging.error(f"Project directory is not valid")
+        logging.error(f"{Colors.RED}Project directory is not valid{Colors.RESET}")
         return
     
-    print('Deploying WASM components')
+    print(f'{Colors.BLUE}Deploying WASM components{Colors.RESET}')
     
     # Docker client
     client = docker.from_env()
@@ -26,7 +27,7 @@ def deploy_components(project_dir, nats_host, nats_port, detached, metrics, metr
         client.images.get("wash-deploy-image:latest")
     except:
         
-        print(' - Building wash-deploy-image from Dockerfile...')
+        print(f'{Colors.YELLOW} - Building wash-deploy-image from Dockerfile...{Colors.RESET}')
         client.images.build(
             path="src/component_deploy/docker",
             dockerfile="deploy.Dockerfile",
@@ -43,22 +44,32 @@ def deploy_components(project_dir, nats_host, nats_port, detached, metrics, metr
             
         if detached == 'True':
             
-            print('Waiting for deployment...')
-            for container in wait_list:
+            print(f'{Colors.BLUE}Waiting for deployment...{Colors.RESET}')
+            for container_name in wait_list:
                 try:
-                    client.containers.get(container).wait()
-                except Exception:
+                    container = client.containers.get(container_name)
+                    result = container.wait()
+                    exit_code = result['StatusCode']
+                    
+                    if exit_code == 0:
+                        print(f"{Colors.GREEN} - Deployment successful for {container_name}, removing container{Colors.RESET}")
+                        container.remove()
+                    else:
+                        print(f"{Colors.RED} - Deployment failed for {container_name} (exit code: {exit_code}), keeping container for debugging{Colors.RESET}")
+                        
+                except Exception as e:
+                    print(f"{Colors.YELLOW} - Error waiting for container {container_name}: {e}{Colors.RESET}")
                     continue
         
     except Exception as e:
-        logging.error(f"Error deploying project: {e}")
+        logging.error(f"{Colors.RED}Error deploying project: {e}{Colors.RESET}")
         return
     
     if metrics_enabled:
         deploy_metrics['components_deploy_time'] = '%.3f'%(time.time() - start_time)
         metrics['deploy'] = deploy_metrics
         
-    print("Project deployed successfully")
+    print(f"{Colors.GREEN}Project deployed successfully{Colors.RESET}")
     
 def __deploy_wadm(task_dir, client, nats_host, nats_port, detached, wait_list):
     
@@ -68,14 +79,25 @@ def __deploy_wadm(task_dir, client, nats_host, nats_port, detached, wait_list):
     
     name = wadm['spec']['components'][0]['name'] + '-deploy'
     
+    # Check if container with the same name already exists and remove it
+    try:
+        existing_container = client.containers.get(name)
+        print(f"{Colors.YELLOW} - Removing existing container {name}{Colors.RESET}")
+        existing_container.remove(force=True)
+    except docker.errors.NotFound:
+        # Container doesn't exist, continue
+        pass
+    except Exception as e:
+        print(f"{Colors.RED} - Warning: Could not remove existing container {name}: {e}{Colors.RESET}")
+    
     # Build the wasm module
-    print(f" - Deploying WASM module {name}")
+    print(f"{Colors.BLUE} - Deploying WASM module {name}{Colors.RESET}")
     container = client.containers.run(
         "wash-deploy-image:latest",
         environment=[f'WASMCLOUD_CTL_HOST={nats_host}',
                      f'WASMCLOUD_CTL_PORT={nats_port}'],
         volumes={path: {'bind': '/app', 'mode': 'rw'}},
-        remove=True,
+        remove=False,
         detach=True,
         name=name
     )
