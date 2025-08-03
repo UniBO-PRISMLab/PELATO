@@ -4,7 +4,7 @@
 package handler
 
 import (
-	"gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasmcloud/messaging/types"
+	"github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasmcloud/messaging/types"
 )
 
 // BrokerMessage represents the type alias "wasmcloud:messaging/handler@0.2.0#broker-message".

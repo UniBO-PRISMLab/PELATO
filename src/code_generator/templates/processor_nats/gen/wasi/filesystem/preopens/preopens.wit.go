@@ -4,7 +4,7 @@
 package preopens
 
 import (
-	"gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasi/filesystem/types"
+	"github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasi/filesystem/types"
 	"github.com/bytecodealliance/wasm-tools-go/cm"
 )
 

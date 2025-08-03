@@ -1,9 +1,8 @@
-module gitea.rebus.ninja/lore/wasm-nats-stream-client
+module github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats
 
 go 1.23.0
 
 require (
-	gitea.rebus.ninja/lore/go-nats-client v0.0.0-20241214003044-5974f6eef794
 	github.com/bytecodealliance/wasm-tools-go v0.3.2
 	go.wasmcloud.dev/component v0.0.5
 	go.wasmcloud.dev/wadge v0.7.0

@@ -4,7 +4,7 @@
 package consumer
 
 import (
-	"gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasmcloud/messaging/types"
+	"github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasmcloud/messaging/types"
 	"github.com/bytecodealliance/wasm-tools-go/cm"
 )
 

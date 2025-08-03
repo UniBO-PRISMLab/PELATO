@@ -2,10 +2,10 @@
 package main
 
 import (
-	logger "gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasi/logging/logging"
-	"gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasmcloud/messaging/consumer"
-	"gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasmcloud/messaging/handler"
-	"gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasmcloud/messaging/types"
+	logger "github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasi/logging/logging"
+	"github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasmcloud/messaging/consumer"
+	"github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasmcloud/messaging/handler"
+	"github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasmcloud/messaging/types"
 	"github.com/bytecodealliance/wasm-tools-go/cm"
 )
 

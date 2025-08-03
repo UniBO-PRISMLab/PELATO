@@ -1,5 +1,5 @@
-gitea.rebus.ninja/lore/go-nats-client v0.0.0-20241214003044-5974f6eef794 h1:9aKUG/OGg5CW8EOy1PnYm6vjOFEPRhT2j8QcQsl0tSU=
-gitea.rebus.ninja/lore/go-nats-client v0.0.0-20241214003044-5974f6eef794/go.mod h1:VfOt4aVA8SlVMA2lqiBSw42jioWz+VjIztb2pCzZfFc=
+github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats v0.0.0-20241214003044-5974f6eef794 h1:9aKUG/OGg5CW8EOy1PnYm6vjOFEPRhT2j8QcQsl0tSU=
+github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats v0.0.0-20241214003044-5974f6eef794/go.mod h1:VfOt4aVA8SlVMA2lqiBSw42jioWz+VjIztb2pCzZfFc=
 github.com/bytecodealliance/wasm-tools-go v0.3.2 h1:LKni9PS8yCG5/A79L8tcTKthgf7WN5RZD83W1m6wEE0=
 github.com/bytecodealliance/wasm-tools-go v0.3.2/go.mod h1:fdysX1+SiPxcIhdpg8TLhoxz23k28/5cQ0/L9J4mgig=
 github.com/coreos/go-semver v0.3.1 h1:yi21YpKnrx1gt5R+la8n5WgS0kCrsPp33dmEyHReZr4=

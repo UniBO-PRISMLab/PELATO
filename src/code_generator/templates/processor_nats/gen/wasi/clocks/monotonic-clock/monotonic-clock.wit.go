@@ -4,7 +4,7 @@
 package monotonicclock
 
 import (
-	"gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasi/io/poll"
+	"github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasi/io/poll"
 	"github.com/bytecodealliance/wasm-tools-go/cm"
 )
 

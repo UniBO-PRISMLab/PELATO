@@ -4,10 +4,10 @@
 package types
 
 import (
-	monotonicclock "gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasi/clocks/monotonic-clock"
-	ioerror "gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasi/io/error"
-	"gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasi/io/poll"
-	"gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasi/io/streams"
+	monotonicclock "github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasi/clocks/monotonic-clock"
+	ioerror "github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasi/io/error"
+	"github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasi/io/poll"
+	"github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasi/io/streams"
 	"github.com/bytecodealliance/wasm-tools-go/cm"
 )
 

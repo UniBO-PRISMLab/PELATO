@@ -4,8 +4,8 @@
 package tcpcreatesocket
 
 import (
-	"gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasi/sockets/network"
-	"gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasi/sockets/tcp"
+	"github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasi/sockets/network"
+	"github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasi/sockets/tcp"
 	"github.com/bytecodealliance/wasm-tools-go/cm"
 )
 

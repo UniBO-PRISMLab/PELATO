@@ -5,8 +5,8 @@
 package main
 
 import (
-	gitea_rebus_ninja__lore__wasm___nats___stream___client__gen__wasmcloud__messaging__consumer "gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasmcloud/messaging/consumer"
-	gitea_rebus_ninja__lore__wasm___nats___stream___client__gen__wasmcloud__messaging__types "gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasmcloud/messaging/types"
+	gitea_rebus_ninja__lore__wasm___nats___stream___client__gen__wasmcloud__messaging__consumer "github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasmcloud/messaging/consumer"
+	gitea_rebus_ninja__lore__wasm___nats___stream___client__gen__wasmcloud__messaging__types "github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasmcloud/messaging/types"
 	github_com__bytecodealliance__wasm___tools___go__cm "github.com/bytecodealliance/wasm-tools-go/cm"
 	wadge "go.wasmcloud.dev/wadge"
 	"runtime"
@@ -17,7 +17,7 @@ const _ string = runtime.Compiler
 
 var _ unsafe.Pointer
 
-//go:linkname wasmimport_Log gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasi/logging/logging.wasmimport_Log
+//go:linkname wasmimport_Log github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasi/logging/logging.wasmimport_Log
 func wasmimport_Log(level0 uint32, context0 *uint8, context1 uint32, message0 *uint8, message1 uint32) {
 	var __p runtime.Pinner
 	defer __p.Unpin()
@@ -49,7 +49,7 @@ func wasmimport_Log(level0 uint32, context0 *uint8, context1 uint32, message0 *u
 	return
 }
 
-//go:linkname wasmimport_Publish gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasmcloud/messaging/consumer.wasmimport_Publish
+//go:linkname wasmimport_Publish github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasmcloud/messaging/consumer.wasmimport_Publish
 func wasmimport_Publish(msg0 *uint8, msg1 uint32, msg2 *uint8, msg3 uint32, msg4 uint32, msg5 *uint8, msg6 uint32, result *github_com__bytecodealliance__wasm___tools___go__cm.Result[string, struct{}, string]) {
 	var __p runtime.Pinner
 	defer __p.Unpin()
@@ -93,7 +93,7 @@ func wasmimport_Publish(msg0 *uint8, msg1 uint32, msg2 *uint8, msg3 uint32, msg4
 	return
 }
 
-//go:linkname wasmimport_Request gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasmcloud/messaging/consumer.wasmimport_Request
+//go:linkname wasmimport_Request github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasmcloud/messaging/consumer.wasmimport_Request
 func wasmimport_Request(subject0 *uint8, subject1 uint32, body0 *uint8, body1 uint32, timeoutMs0 uint32, result *github_com__bytecodealliance__wasm___tools___go__cm.Result[gitea_rebus_ninja__lore__wasm___nats___stream___client__gen__wasmcloud__messaging__consumer.BrokerMessageShape, gitea_rebus_ninja__lore__wasm___nats___stream___client__gen__wasmcloud__messaging__types.BrokerMessage, string]) {
 	var __p runtime.Pinner
 	defer __p.Unpin()

@@ -4,8 +4,8 @@
 package streams
 
 import (
-	ioerror "gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasi/io/error"
-	"gitea.rebus.ninja/lore/wasm-nats-stream-client/gen/wasi/io/poll"
+	ioerror "github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasi/io/error"
+	"github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats/gen/wasi/io/poll"
 	"github.com/bytecodealliance/wasm-tools-go/cm"
 )
 
