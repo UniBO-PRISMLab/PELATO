@@ -48,4 +48,4 @@ RUN mkdir /app
 WORKDIR /app
 
 # Install go dependencies, build the wasm module, push it to the registry
-CMD ["sh", "-c", "go env -w GOFLAGS=-buildvcs=false && go mod download && go mod verify && wash build && wash push $REGISTRY build/*.wasm && chown -R ${HOST_UID}:${HOST_GID} ."]
+CMD ["sh", "-c", "go env -w GOFLAGS=-buildvcs=false && go mod download && go mod verify && wash build && wash push $REGISTRY build/${COMPONENT_NAME}.wasm && chown -R ${HOST_UID}:${HOST_GID} ."]
