@@ -22,3 +22,9 @@ def load_metrics(project_dir):
         metrics = yaml.safe_load(file)
     
     return metrics
+
+def get_available_templates():
+
+    ## Read all directories found inside code_generator/templates and return the names as a list
+    templates_dir = "src/code_generator/templates"
+    return [name for name in os.listdir(templates_dir) if os.path.isdir(os.path.join(templates_dir, name))]
