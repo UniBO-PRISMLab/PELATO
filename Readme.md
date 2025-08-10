@@ -91,9 +91,9 @@ metadata:
   annotations:
     description: 'Data stream processing using NATS topic in Golang (TinyGo), using the WebAssembly Component Model and WebAssembly Interfaces Types (WIT)'
     wasmcloud.dev/authors: Lorenzo Venerandi
-    wasmcloud.dev/source-url: https://gitea.rebus.ninja/lore/wasm-nats-stream-client.git/wadm.yaml
-    wasmcloud.dev/readme-md-url: https://gitea.rebus.ninja/lore/wasm-nats-stream-client.git/README.md
-    wasmcloud.dev/homepage: https://gitea.rebus.ninja/lore/wasm-nats-stream-client.git
+    wasmcloud.dev/source-url: https://github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats.git/wadm.yaml
+    wasmcloud.dev/readme-md-url: https://github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats.git/README.md
+    wasmcloud.dev/homepage: https://github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats.git
     wasmcloud.dev/categories: |
       stream-processing,nats-client,tinygo,golang
 spec:
@@ -101,7 +101,7 @@ spec:
     - name: go_stream_processor
       type: component
       properties:
-        image: gitea.rebus.ninja/lore/wasm-nats-stream-client:1.0.3
+        image: github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/processor_nats:1.0.3
         id: stream
         config: 
           - name: nats-topic
