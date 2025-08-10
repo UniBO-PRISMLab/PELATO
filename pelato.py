@@ -56,6 +56,13 @@ def suggest_command(invalid_command):
     print(f"   {Colors.GREEN}remove{Colors.RESET}  - Remove deployed WASM components")
     print(f"   {Colors.GREEN}brush{Colors.RESET}   - Full pipeline: gen → build → deploy")
 
+    # print available templates
+    available_templates = ut.get_available_templates()
+    if available_templates:
+        print(f"\n{Colors.BLUE}Available templates:{Colors.RESET}")
+        for template in available_templates:
+            print(f"   {Colors.CYAN}• {template}{Colors.RESET}")
+
 def main():
     
     print_banner()
@@ -91,6 +98,14 @@ def main():
   REGISTRY_URL, REGISTRY_USER, REGISTRY_PASSWORD
   NATS_HOST, NATS_PORT, PARALLEL_BUILD, ENABLE_METRICS
 """
+            # Lista template disponibili
+            import src.utils as ut
+            available_templates = ut.get_available_templates()
+            if available_templates:
+                help_text += f"\n{Colors.BLUE}Available templates:{Colors.RESET}\n"
+                for template in available_templates:
+                    help_text += f"   {Colors.CYAN}• {template}{Colors.RESET}\n"
+            
             return help_text
     
     parser = argparse.ArgumentParser(
