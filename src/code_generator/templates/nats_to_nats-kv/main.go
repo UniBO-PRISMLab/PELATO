@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"runtime/debug"
 	"time"
+	"encoding/json"
 
 	store "github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/nats_to_nats-kv/gen/wasi/keyvalue/store"
 	logger "github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/nats_to_nats-kv/gen/wasi/logging/logging"
-	"github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/nats_to_nats-kv/gen/wasmcloud/messaging/consumer"
 	handler "github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/nats_to_nats-kv/gen/wasmcloud/messaging/handler"
 	types "github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/nats_to_nats-kv/gen/wasmcloud/messaging/types"
 	"github.com/bytecodealliance/wasm-tools-go/cm"
+	gcm "go.bytecodealliance.org/cm"
 )
 // Simple structured logging helper
 func logf(level logger.Level, msg string, kv ...string) {
@@ -19,6 +20,11 @@ func logf(level logger.Level, msg string, kv ...string) {
 		msg = msg + " | " + fmt.Sprint(kv)
 	}
 	logger.Log(level, "KVWriter", msg)
+}
+
+type Message struct {
+    Key  string
+	Data string
 }
 
 func init() { handler.Exports.HandleMessage = handleMessage }
@@ -41,23 +47,32 @@ func handleMessage(msg types.BrokerMessage) cm.Result[string, struct{}, string] 
 		return cm.Err[cm.Result[string, struct{}, string]]("kv open error: " + err.String())
 	}
 
-	// Extract raw body bytes
 	body := msg.Body
-	// Copy body into a Go byte slice
-	bytes := make([]byte, body.Len())
-	for i := uint32(0); i < body.Len(); i++ {
-		bytes[i] = *body.Data().Add(i)
+	message := Message{}
+
+	// Unmarshal the message body into our struct
+	if err := json.Unmarshal(body.Slice(), &message); err != nil {
+		logf(logger.LevelError, "unmarshal message failed", "subject", msg.Subject, "error", err.Error())
+		return cm.Err[cm.Result[string, struct{}, string]]("unmarshal error: " + err.Error())
 	}
 
-	// Use message subject as key (simple strategy). Alternative strategies could parse JSON.
-	key := msg.Subject
-	setRes := store.Bucket.Set(*kvStore.OK(), key, cm.ToList(bytes))
+	if message.Data == "" {
+		logf(logger.LevelWarn, "invalid message - skipped", "subject", msg.Subject)
+		return cm.Err[cm.Result[string, struct{}, string]]("invalid message")
+	}
+
+	// if key is missing put topic in key
+	if message.Key == "" {
+		message.Key = msg.Subject
+	}
+
+	setRes := store.Bucket.Set(*kvStore.OK(), message.Key, gcm.ToList([]byte(message.Data)))
 	if setRes.IsErr() {
 		logf(logger.LevelError, "kv set failed", "subject", msg.Subject, "error", setRes.Err().String())
 		return cm.Err[cm.Result[string, struct{}, string]]("kv set error: " + setRes.Err().String())
 	}
 
-	logf(logger.LevelInfo, "stored message", "key", key, "bytes", fmt.Sprintf("%d", len(bytes)), "duration", time.Since(start).String())
+	logf(logger.LevelInfo, "stored message", "key", message.Key, "bytes", fmt.Sprintf("%d", len(message.Data)), "duration", time.Since(start).String())
 	return cm.OK[cm.Result[string, struct{}, string]](struct{}{})
 }
 
