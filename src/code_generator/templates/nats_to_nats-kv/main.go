@@ -7,10 +7,10 @@ import (
 	"time"
 	"encoding/json"
 
-	store "{{component_name}}/gen/wasi/keyvalue/store"
-	logger "{{component_name}}/gen/wasi/logging/logging"
-	handler "{{component_name}}/gen/wasmcloud/messaging/handler"
-	types "{{component_name}}/gen/wasmcloud/messaging/types"
+	store "github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/nats_to_nats-kv/gen/wasi/keyvalue/store"
+	logger "github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/nats_to_nats-kv/gen/wasi/logging/logging"
+	handler "github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/nats_to_nats-kv/gen/wasmcloud/messaging/handler"
+	types "github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/nats_to_nats-kv/gen/wasmcloud/messaging/types"
 	"github.com/bytecodealliance/wasm-tools-go/cm"
 )
 // Simple structured logging helper

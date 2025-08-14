@@ -1,4 +1,4 @@
-module {{component_name}}
+module github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/nats_to_nats-kv
 
 go 1.23.0
 
