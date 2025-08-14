@@ -1,4 +1,4 @@
-// //go:generate go run github.com/bytecodealliance/wasm-tools-go/cmd/wit-bindgen-go generate --world default --out gen ./wit
+//go:generate go run github.com/bytecodealliance/wasm-tools-go/cmd/wit-bindgen-go generate --world default --out gen ./wit
 package main
 
 import (
@@ -7,12 +7,11 @@ import (
 	"time"
 	"encoding/json"
 
-	store "github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/nats_to_nats-kv/gen/wasi/keyvalue/store"
-	logger "github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/nats_to_nats-kv/gen/wasi/logging/logging"
-	handler "github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/nats_to_nats-kv/gen/wasmcloud/messaging/handler"
-	types "github.com/UniBO-PRISMLab/PELATO/src/code_generator/templates/nats_to_nats-kv/gen/wasmcloud/messaging/types"
+	store "{{component_name}}/gen/wasi/keyvalue/store"
+	logger "{{component_name}}/gen/wasi/logging/logging"
+	handler "{{component_name}}/gen/wasmcloud/messaging/handler"
+	types "{{component_name}}/gen/wasmcloud/messaging/types"
 	"github.com/bytecodealliance/wasm-tools-go/cm"
-	gcm "go.bytecodealliance.org/cm"
 )
 // Simple structured logging helper
 func logf(level logger.Level, msg string, kv ...string) {
@@ -41,11 +40,12 @@ func handleMessage(msg types.BrokerMessage) cm.Result[string, struct{}, string] 
 	}
 
 	// Open bucket
-	kvStore := store.Open("default")
-	if err := kvStore.Err(); err != nil {
-		logf(logger.LevelError, "open bucket failed", "error", err.String())
-		return cm.Err[cm.Result[string, struct{}, string]]("kv open error: " + err.String())
+	kvStoreResult := store.Open("default")
+	if kvStoreResult.IsErr() {
+		logf(logger.LevelError, "open bucket failed", "error", kvStoreResult.Err().String())
+		return cm.Err[cm.Result[string, struct{}, string]]("kv open error: " + kvStoreResult.Err().String())
 	}
+	kvStore := kvStoreResult.OK()
 
 	body := msg.Body
 	message := Message{}
@@ -66,7 +66,13 @@ func handleMessage(msg types.BrokerMessage) cm.Result[string, struct{}, string] 
 		message.Key = msg.Subject
 	}
 
-	setRes := store.Bucket.Set(*kvStore.OK(), message.Key, gcm.ToList([]byte(message.Data)))
+	// Modify the key or data with external fuction named exec_task, it must take a key and data  and return key and data
+	newKey, newData := exec_task(message.Key, message.Data)
+
+	message.Key = newKey
+	message.Data = newData
+
+	setRes := kvStore.Set(message.Key, cm.ToList([]byte(message.Data)))
 	if setRes.IsErr() {
 		logf(logger.LevelError, "kv set failed", "subject", msg.Subject, "error", setRes.Err().String())
 		return cm.Err[cm.Result[string, struct{}, string]]("kv set error: " + setRes.Err().String())

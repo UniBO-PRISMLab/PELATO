@@ -1,7 +1,7 @@
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: "nats-to-nats-kv"
+  name: {{ component_name }}
   annotations:
     description: "NATS messaging to keyvalue sync example"
     wasmcloud.dev/authors: wasmCloud team
@@ -12,11 +12,52 @@ metadata:
       nats,messaging,keyvalue,tinygo,golang,example
 spec:
   components:
+  - name: {{ component_name }}
+    type: component
+    properties:
+      image: {{ registry_url }}/{{ component_name }}:{{ version }}
+    traits:
+    - type: link
+      properties:
+        namespace: wasmcloud
+        package: keyvalue
+        interfaces:
+        - store
+        target:
+          name: keyvalue-nats
+          config:
+          - name: wasi-keyvalue-config-{{ component_name }}
+            properties:
+              bucket: {{ bucket }}
+              enable_bucket_auto_create: 'true'
+    - type: spreadscaler
+      properties:
+        instances: 1
+        spread:
+        {%- set weight = (100 / (targets | length)) | int -%}
+        {% for target in targets %}
+        - name: {{ target }}
+          weight: {{ weight }}
+          requirements:
+            host-type: {{ target }}
+        {% endfor %}
+
   - name: keyvalue-nats
     type: capability
     properties:
       image: ghcr.io/wasmcloud/keyvalue-nats:0.3.1
-    traits: []
+    traits:
+      - type: spreadscaler
+        properties:
+          instances: 1
+          spread:
+          {%- set weight = (100 / (targets | length)) | int -%}
+          {% for target in targets %}
+          - name: {{ target }}
+            weight: {{ weight }}
+            requirements:
+              host-type: {{ target }}
+          {% endfor %}
   - name: messaging-nats
     type: capability
     properties:
@@ -24,33 +65,22 @@ spec:
     traits:
       - type: link
         properties:
-          target: nats-to-nats-kv
+          target: {{ component_name }}
           namespace: wasmcloud
           package: messaging
           interfaces: [handler]
           source_config:
-            - name: simple-subscription
+            - name: simple-subscription-{{ component_name }}
               properties:
-                subscriptions: test.example
-  - name: nats-to-nats-kv
-    type: component
-    properties:
-      image: file://./build/nats-keyvalue-sync_s.wasm
-      id: nats-kv-handler
-    traits:
-    - type: spreadscaler
-      properties:
-        instances: 1
-    - type: link
-      properties:
-        namespace: wasi
-        package: keyvalue
-        interfaces:
-        - store
-        target:
-          name: keyvalue-nats
-          config:
-          - name: wasi-keyvalue-config
-            properties:
-              bucket: test-keyvalue
-              enable_bucket_auto_create: 'true'
+                subscriptions: {{ source_topic}}
+      - type: spreadscaler
+        properties:
+          instances: 1
+          spread:
+          {%- set weight = (100 / (targets | length)) | int -%}
+          {% for target in targets %}
+          - name: {{ target }}
+            weight: {{ weight }}
+            requirements:
+              host-type: {{ target }}
+          {% endfor %}

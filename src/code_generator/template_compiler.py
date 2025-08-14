@@ -14,6 +14,8 @@ def handle_task(task, output_dir):
                 __generate_processor(task, output_dir)
             case 'dbsync_nats':
                 __generate_dbsync(task, output_dir)
+            case 'nats_to_nats-kv':
+                __generate_nats_kv_sync(task, output_dir)
             case _:
                 logging.error(f"Task type {task['type']} not supported")
                 pass
@@ -42,23 +44,38 @@ def __generate_producer(task, output_dir):
 
 def __generate_processor(task, output_dir):
     # Copy the template folder to the output folder
-    __copytree("src/code_generator/templates/processor_nats", f"{output_dir}/{task['component_name']}")
+        __copytree("src/code_generator/templates/processor_nats", f"{output_dir}/{task['component_name']}")
+        
+        # Replace each file of the output dir with the template
+        for filename in os.listdir(f"{output_dir}/{task['component_name']}"):
+            
+            # Skip the following files
+            if filename in ['Dockerfile', 'go.mod', 'go.sum', 'tools.go', 'bindings.wadge.go']:
+                continue
+            
+            # Skip if it's a directory
+            if os.path.isdir(f"{output_dir}/{task['component_name']}/{filename}"):
+                continue
+            
+            __replace_file_with_template(filename, f"{output_dir}/{task['component_name']}", task)
+
+def __generate_nats_kv_sync(task, output_dir):
     
+    __copytree("src/code_generator/templates/nats_to_nats-kv", f"{output_dir}/{task['component_name']}")
+
     # Replace each file of the output dir with the template
     for filename in os.listdir(f"{output_dir}/{task['component_name']}"):
-        
+
         # Skip the following files
-        if filename in ['Dockerfile', 'go.mod', 'go.sum', 'tools.go', 'bindings.wadge.go']:
+        if filename in ['Dockerfile', 'go.sum', 'tools.go']:
             continue
-        
+
         # Skip if it's a directory
         if os.path.isdir(f"{output_dir}/{task['component_name']}/{filename}"):
             continue
-        
+
         __replace_file_with_template(filename, f"{output_dir}/{task['component_name']}", task)
 
-def __generate_dbsync(task, output_dir):
-    pass
 
 def __copytree(src, dst, symlinks=False, ignore=None):
     

@@ -1,9 +1,9 @@
-name = "nats-keyvalue-sync"
+name = "{{ name }}"
 language = "tinygo"
 type = "component"
-version = "0.1.0"
+version = "{{ version }}"
 
 [component]
 wit_world = "default"
 wasm_target = "wasm32-wasip2"
-destination = "build/nats-keyvalue-sync_s.wasm"
+destination = "build/{{ component_name }}.wasm"

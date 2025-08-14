@@ -48,7 +48,7 @@ spec:
             package: messaging
             interfaces: [handler]
             source_config:
-              - name: simple-subscription
+              - name: simple-subscription-{{ component_name }}
                 properties:
                   subscriptions: {{ source_topic}}
         - type: spreadscaler
