@@ -1,0 +1,318 @@
+config:
+  cluster:
+    enabled: true
+    merge: {}
+    patch: []
+    port: 6222
+    replicas: 3
+    routeURLs:
+      k8sClusterDomain: cluster.local
+      password: null
+      useFQDN: false
+      user: null
+    tls:
+      cert: tls.crt
+      dir: /etc/nats-certs/cluster
+      enabled: false
+      key: tls.key
+      merge: {}
+      patch: []
+      secretName: null
+  gateway:
+    enabled: false
+    merge: {}
+    patch: []
+    port: 7222
+    tls:
+      cert: tls.crt
+      dir: /etc/nats-certs/gateway
+      enabled: false
+      key: tls.key
+      merge: {}
+      patch: []
+      secretName: null
+  jetstream:
+    enabled: true
+    fileStore:
+      dir: /data
+      enabled: true
+      maxSize: null
+      pvc:
+        enabled: true
+        merge: {}
+        name: null
+        patch: []
+        size: 10Gi
+        storageClassName: null
+    memoryStore:
+      enabled: false
+      maxSize: 1Gi
+    merge:
+      domain: default
+    patch: []
+  leafnodes:
+    enabled: true
+    merge:
+      no_advertise: false
+    patch: []
+    port: 7422
+    tls:
+      cert: tls.crt
+      dir: /etc/nats-certs/leafnodes
+      enabled: false
+      key: tls.key
+      merge: {}
+      patch: []
+      secretName: null
+  merge: {}
+  monitor:
+    enabled: true
+    port: 8222
+    tls:
+      enabled: false
+  mqtt:
+    enabled: false
+    merge: {}
+    patch: []
+    port: 1883
+    tls:
+      cert: tls.crt
+      dir: /etc/nats-certs/mqtt
+      enabled: false
+      key: tls.key
+      merge: {}
+      patch: []
+      secretName: null
+  nats:
+    port: 4222
+    tls:
+      cert: tls.crt
+      dir: /etc/nats-certs/nats
+      enabled: false
+      key: tls.key
+      merge: {}
+      patch: []
+      secretName: null
+  patch: []
+  profiling:
+    enabled: false
+    port: 65432
+  resolver:
+    dir: /data/resolver
+    enabled: false
+    merge: {}
+    patch: []
+    pvc:
+      enabled: true
+      merge: {}
+      name: null
+      patch: []
+      size: 1Gi
+      storageClassName: null
+  serverNamePrefix: ''
+  websocket:
+    enabled: true
+    ingress:
+      className: null
+      enabled: false
+      hosts: []
+      merge: {}
+      name: null
+      patch: []
+      path: /
+      pathType: Exact
+      tlsSecretName: null
+    merge: {}
+    patch: []
+    port: 8080
+    tls:
+      cert: tls.crt
+      dir: /etc/nats-certs/websocket
+      enabled: false
+      key: tls.key
+      merge: {}
+      patch: []
+      secretName: null
+configMap:
+  merge: {}
+  name: null
+  patch: []
+container:
+  env: {}
+  image:
+    digest: null
+    fullImageName: null
+    pullPolicy: null
+    registry: null
+    repository: nats
+    tag: 2.11.7-alpine
+  merge: {}
+  patch: []
+  ports:
+    cluster: {}
+    gateway: {}
+    leafnodes: {}
+    monitor: {}
+    mqtt: {}
+    nats: {}
+    profiling: {}
+    websocket: {}
+extraResources: []
+fullnameOverride: null
+global:
+  image:
+    pullPolicy: null
+    pullSecretNames: []
+    registry: null
+  labels: {}
+  cattle:
+    clusterId: c-rkqh7
+    clusterName: k3s-chungo
+    rkePathPrefix: ''
+    rkeWindowsPathPrefix: ''
+    systemProjectId: p-hsfqq
+    url: https://rancher.chungo.home
+headlessService:
+  merge: {}
+  name: null
+  patch: []
+nameOverride: null
+namespaceOverride: null
+natsBox:
+  container:
+    env: {}
+    image:
+      digest: null
+      fullImageName: null
+      pullPolicy: null
+      registry: null
+      repository: natsio/nats-box
+      tag: 0.18.0
+    merge: {}
+    patch: []
+  contentsSecret:
+    merge: {}
+    name: null
+    patch: []
+  contexts:
+    default:
+      creds:
+        contents: null
+        dir: null
+        key: nats.creds
+        secretName: null
+      merge: {}
+      nkey:
+        contents: null
+        dir: null
+        key: nats.nk
+        secretName: null
+      patch: []
+      tls:
+        cert: tls.crt
+        dir: null
+        key: tls.key
+        secretName: null
+  contextsSecret:
+    merge: {}
+    name: null
+    patch: []
+  defaultContextName: default
+  deployment:
+    merge: {}
+    name: null
+    patch: []
+  enabled: true
+  podTemplate:
+    merge: {}
+    patch: []
+  serviceAccount:
+    enabled: false
+    merge: {}
+    name: null
+    patch: []
+podDisruptionBudget:
+  enabled: true
+  merge: {}
+  name: null
+  patch: []
+podTemplate:
+  configChecksumAnnotation: true
+  merge: {}
+  patch: []
+  topologySpreadConstraints: {}
+promExporter:
+  enabled: false
+  env: {}
+  image:
+    digest: null
+    fullImageName: null
+    pullPolicy: null
+    registry: null
+    repository: natsio/prometheus-nats-exporter
+    tag: 0.17.3
+  merge: {}
+  monitorDomain: localhost
+  patch: []
+  podMonitor:
+    enabled: false
+    merge: {}
+    name: null
+    patch: []
+  port: 7777
+reloader:
+  enabled: true
+  env: {}
+  image:
+    digest: null
+    fullImageName: null
+    pullPolicy: null
+    registry: null
+    repository: natsio/nats-server-config-reloader
+    tag: 0.19.0
+  merge: {}
+  natsVolumeMountPrefixes:
+    - /etc/
+  patch: []
+service:
+  enabled: true
+  merge:
+    spec:
+      type: LoadBalancer
+  name: null
+  patch: []
+  ports:
+    cluster:
+      enabled: false
+    gateway:
+      enabled: false
+    leafnodes:
+      enabled: true
+    monitor:
+      enabled: false
+    mqtt:
+      enabled: true
+    nats:
+      enabled: true
+    profiling:
+      enabled: false
+    websocket:
+      enabled: true
+serviceAccount:
+  enabled: false
+  merge: {}
+  name: null
+  patch: []
+statefulSet:
+  merge: {}
+  name: null
+  patch: []
+tlsCA:
+  configMapName: null
+  dir: /etc/nats-ca-cert
+  enabled: false
+  key: ca.crt
+  secretName: null
+cluster:
+  enabled: true
+  replicas: 3

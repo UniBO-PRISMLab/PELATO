@@ -1,0 +1,116 @@
+fullnameOverride: wasmcloud-platform
+host:
+  enabled: false
+  fullnameOverride: wasmcloud
+  nameOverride: wasmcloud
+hostConfig:
+  enabled: false
+  lattice: default
+  name: wasmcloud-host
+  resources:
+    nats: {}
+    wasmCloudHost: {}
+  version: 1.8.0
+nameOverride: wasmcloud-platform
+nats:
+  config:
+    cluster:
+      enabled: true
+      replicas: 3
+    jetstream:
+      enabled: true
+      fileStore:
+        pvc:
+          size: 10Gi
+      merge:
+        domain: default
+    leafnodes:
+      enabled: true
+    websocket:
+      enabled: true
+      port: 4223
+  enabled: false
+  fullnameOverride: nats
+  nameOverride: nats
+operator:
+  affinity: {}
+  enabled: true
+  fullnameOverride: wasmcloud-operator
+  global: {}
+  image:
+    pullPolicy: IfNotPresent
+    repository: ghcr.io/wasmcloud/wasmcloud-operator
+    tag: ''
+  imagePullSecrets: []
+  nameOverride: wasmcloud-operator
+  nodeSelector: {}
+  podAnnotations: {}
+  podLabels: {}
+  podSecurityContext: {}
+  resources: {}
+  securityContext: {}
+  service:
+    port: 8443
+    type: ClusterIP
+  serviceAccount:
+    annotations: {}
+    automount: true
+    create: true
+    name: ''
+  tolerations: []
+wadm:
+  affinity: {}
+  enabled: true
+  fullnameOverride: wadm
+  global: {}
+  imagePullSecrets: []
+  nameOverride: wadm
+  nodeSelector: {}
+  podAnnotations: {}
+  podLabels: {}
+  podSecurityContext: {}
+  resources: {}
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    runAsGroup: 1000
+    runAsNonRoot: true
+    runAsUser: 1000
+    seccompProfile:
+      type: RuntimeDefault
+  serviceAccount:
+    annotations: {}
+    automount: true
+    create: true
+    name: ''
+  tolerations: []
+  wadm:
+    config:
+      apiPrefix: ''
+      cleanupInterval: ''
+      hostId: ''
+      logLevel: ''
+      manifestBucket: ''
+      maxJobs: ''
+      multitenant: false
+      nats:
+        creds:
+          jwt: ''
+          key: nats.creds
+          secretName: ''
+          seed: ''
+        jetstreamDomain: ''
+        server: nats://nats.wasmcloud.svc.cluster.local:4222
+        tlsCaFile: ''
+      stateBucket: ''
+      streamPrefix: ''
+      structuredLogging: false
+      tracing: false
+      tracingEndpoint: ''
+    image:
+      pullPolicy: IfNotPresent
+      repository: ghcr.io/wasmcloud/wadm
+      tag: v0.21.0
+    replicas: 1
