@@ -19,17 +19,18 @@ spec:
     traits:
     - type: link
       properties:
-        namespace: wasmcloud
+        namespace: wasi
         package: keyvalue
         interfaces:
         - store
         target:
-          name: keyvalue-nats-{{ component_name }}
+          name: keyvalue-nats
           config:
-          - name: wasi-keyvalue-config
+          - name: default
             properties:
               bucket: {{ bucket }}
               enable_bucket_auto_create: 'true'
+              js_domain: {{ js_domain }}
     - type: spreadscaler
       properties:
         instances: 1
@@ -42,10 +43,14 @@ spec:
             host-type: {{ target }}
         {% endfor %}
 
-  - name: keyvalue-nats-{{ component_name }}
+  - name: keyvalue-nats
     type: capability
     properties:
       image: ghcr.io/wasmcloud/keyvalue-nats:0.3.1
+      config:
+        - name: default
+          properties:
+            js_domain: {{ js_domain }}
     traits:
       - type: spreadscaler
         properties:
@@ -58,7 +63,7 @@ spec:
             requirements:
               host-type: {{ target }}
           {% endfor %}
-  - name: messaging-nats-{{ component_name }}
+  - name: messaging-nats
     type: capability
     properties:
       image: ghcr.io/wasmcloud/messaging-nats:0.24.0
@@ -73,6 +78,7 @@ spec:
             - name: simple-subscription
               properties:
                 subscriptions: {{ source_topic}}
+                js_domain: {{ js_domain }}
       - type: spreadscaler
         properties:
           instances: 1
