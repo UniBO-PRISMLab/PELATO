@@ -29,8 +29,6 @@ spec:
           - name: default
             properties:
               bucket: {{ bucket }}
-              enable_bucket_auto_create: 'true'
-              js_domain: {{ js_domain }}
     - type: spreadscaler
       properties:
         instances: 1
@@ -40,17 +38,11 @@ spec:
         - name: {{ target }}
           weight: {{ weight }}
           requirements:
-            host-type: {{ target }}
-        {% endfor %}
-
+            host-type: {{ target }}{% endfor %}
   - name: keyvalue-nats
     type: capability
     properties:
       image: ghcr.io/wasmcloud/keyvalue-nats:0.3.1
-      config:
-        - name: default
-          properties:
-            js_domain: {{ js_domain }}
     traits:
       - type: spreadscaler
         properties:
@@ -61,8 +53,7 @@ spec:
           - name: {{ target }}
             weight: {{ weight }}
             requirements:
-              host-type: {{ target }}
-          {% endfor %}
+              host-type: {{ target }}{% endfor %}
   - name: messaging-nats
     type: capability
     properties:
@@ -77,8 +68,7 @@ spec:
           source_config:
             - name: simple-subscription
               properties:
-                subscriptions: {{ source_topic}}
-                js_domain: {{ js_domain }}
+                subscriptions: {{ source_topic }}
       - type: spreadscaler
         properties:
           instances: 1
@@ -88,5 +78,4 @@ spec:
           - name: {{ target }}
             weight: {{ weight }}
             requirements:
-              host-type: {{ target }}
-          {% endfor %}
+              host-type: {{ target }}{% endfor %}
